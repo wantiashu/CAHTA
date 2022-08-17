@@ -3,13 +3,9 @@
 '''
 import math
 #The following py must be imported
-#emphtra.unit_conversion
-
-from emphtra.unit_conversion import *
-from emphtra.node import *
-from emphtra.exceptions import *
-
-
+from cahta.unit_conversion import *
+from cahta.node import *
+from cahta.exceptions import *
 
 #Gnielinski
 class GnielinskiSngTrbInsPp(object):
@@ -17,34 +13,31 @@ class GnielinskiSngTrbInsPp(object):
     
     
     '''
-    
   #Please Refer to HEDH 1983 2.5.1 (41)    
     def __init__(self,objTube,objFluid, V_m3_s,
             node1 = {"T_C" : 25, "Q_kW" : 0},
             node2 = {"T_C" : 25, "Q_kW" : 0},
-            mode = "heating"):
+            direction = "heating"):
     # objTube is an instance of class tube
     # objFluid is an instance of class fluid
         self.V_m3_s=V_m3_s
         self.objTube=objTube
         self.objFluid=objFluid
-        self.node_initializer(node1,node2)
+        #self.node_initializer(node1,node2)
 
     # Find the task
     def node_initializer(self,node1,node2):
         '''define the task for this element
 
            node1(T1,Q1),node2(T2,Q2)
-            T1      T2      Q1         Q2     mode       input    output/overide
-           -----------------------------------------------------------------------------------
-           any      any   !=""&!=Q2   !=""    any                 exception: heat unbalance
-           !=""    !=""    !=""       any     any                 exceotion: over rigid  
-            =""     any     any       any     any                 exceotion: no temperature difference
-           !=""     =""     =""        =""    any                 exception: insufficient input 
-            =""    !=""     =""        =""    any                 exception: insufficient input 
-
+            T1      T2      Q1         Q2     direction       input    output/overide
+           ---------------------------------------------------------------------
+           any      any   !=""&!=Q2   !=""    any                 heat unbalance
+           !=""    !=""    !=""       any     any                 over rigid  
+            =""     any     any       any     any                 no temp diff
+           !=""     =""     =""        =""    any                 insuff input 
+            =""    !=""     =""        =""    any                 insuff input 
            !=""     !=""    =""        =""    any        T1,T2    Q1,Q2=Q1
-
            !=""     =""    !=""        =""    any        T1,Q1    Q2=Q1,T2    
            !=""     =""     =""       !=""    any        T1,Q2    Q1=Q2,T2    
             >T2    !=""    !=""        =""    heating    T1,Q1    Q1=Q2,T2    
@@ -55,8 +48,6 @@ class GnielinskiSngTrbInsPp(object):
             <T2    !=""     =""       !=""    cooling    T1,Q2    Q1=Q2,T2    
            !=""     <T1    !=""        =""    cooling    T2,Q1    Q2=Q1,T1    
            !=""     <T1     =""       !=""    cooling    T2,Q2    Q2=Q1,T1    
-
-
         '''
         #rule out four exceptions
         if node1["Q_kW"] != node2["Q_kW"] \
@@ -85,12 +76,12 @@ class GnielinskiSngTrbInsPp(object):
             elif node2["Q_kW"] != "" and node1["Q_kW"] == "" :
                 node1["Q_kW"] == node2["Q_kW"]
             #set T
-            if self.mode == "heating" :
+            if self.direction == "heating" :
                 if node1["T_C"] > node2["T_C"] :
                     node2["T_C"] == ""
                 else:
                     node1["T_C"] == ""
-            if self.mode == "cooling" :
+            if self.direction == "cooling" :
                 if node1["T_C"] < node2["T_C"] :
                     node2["T_C"] == ""
                 else:
