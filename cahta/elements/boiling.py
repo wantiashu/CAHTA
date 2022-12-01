@@ -85,5 +85,14 @@ class BromleyFilBl(object):
         alpha_W_m2K = self.Kf*(self.L_m*deltat_C)**(-1/4)*\
             (lambdav_W_mK**3*rhov_kg_m3*deltah_J_kg\
             *deltarho_kg_m3*9.81/etav_Pas)**(1/4)
+        print("lambdav_W_mK ",lambdav_W_mK)
+        print("rhov_kg_m3 ",tm_C," ",rhov_kg_m3)
+        print("rhols_kg_m3 ",rhols_kg_m3)
+        print("deltarho_kg_m3 ",deltarho_kg_m3)
+        print("hv_J_kg ",tm_C," ",hv_J_kg)
+        print("hls_J_kg ",hls_J_kg)
+        print("deltah_J_kg ",deltah_J_kg)
+        print("etav_Pas ",tm_C," ",etav_Pas)
+        print("alpha_W_m2K ",tm_C," ",alpha_W_m2K)
         return alpha_W_m2K
 

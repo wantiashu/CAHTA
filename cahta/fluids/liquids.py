@@ -25,6 +25,8 @@ class water():
         os.path.join(curdir,"data_files/IAPWS97/Tbl3sglPhRgn1bar.csv")
     pathTbl3SglPhRgn01bar =\
         os.path.join(curdir,"data_files/IAPWS97/Tbl3sglPhRgn01bar.csv")
+    pathTbl3SglPhRgn05bar =\
+        os.path.join(curdir,"data_files/IAPWS97/Tbl3sglPhRgn05bar.csv")
 
     
     def __init__(self,t_C = 20,P_bar = 1):
@@ -57,11 +59,15 @@ class water():
         usecols=["t_C"]).squeeze()
     arrt01bar_C = pd.read_csv(pathTbl3SglPhRgn01bar,\
         usecols=["t_C"]).squeeze()
+    arrt05bar_C = pd.read_csv(pathTbl3SglPhRgn05bar,\
+        usecols=["t_C"]).squeeze()
     arrHg_kJ_kg= pd.read_csv(\
         os.path.join(curdir,\
         "./data_files/IAPWS97/Table3SinglephaseRegion1bar.csv"),\
         usecols=["Hg_kJ_kg"]).squeeze()
     arrHg01bar_kJ_kg= pd.read_csv(pathTbl3SglPhRgn01bar,\
+        usecols=["Hg_kJ_kg"]).squeeze()
+    arrHg05bar_kJ_kg= pd.read_csv(pathTbl3SglPhRgn05bar,\
         usecols=["Hg_kJ_kg"]).squeeze()
     arrVg_m3_kg= pd.read_csv(\
         os.path.join(curdir,\
@@ -69,17 +75,23 @@ class water():
         usecols=["vg_m3_kg"]).squeeze()
     arrVg01bar_m3_kg= pd.read_csv(pathTbl3SglPhRgn01bar,\
         usecols=["vg_m3_kg"]).squeeze()
+    arrVg05bar_m3_kg= pd.read_csv(pathTbl3SglPhRgn05bar,\
+        usecols=["vg_m3_kg"]).squeeze()
     arrlambdag_mW_mK= pd.read_csv(\
         os.path.join(curdir,\
         "./data_files/IAPWS97/Table3SinglephaseRegion1bar.csv"),\
         usecols=["lambdav_mW_mK"]).squeeze()
     arrlambdag01bar_mW_mK= pd.read_csv(pathTbl3SglPhRgn01bar,\
         usecols=["lambdav_mW_mK"]).squeeze()
+    arrlambdag05bar_mW_mK= pd.read_csv(pathTbl3SglPhRgn05bar,\
+        usecols=["lambdav_mW_mK"]).squeeze()
     arretag_uPas= pd.read_csv(\
         os.path.join(curdir,\
         "./data_files/IAPWS97/Table3SinglephaseRegion1bar.csv"),\
         usecols=["etav_uPas"]).squeeze()
     arretag01bar_uPas= pd.read_csv(pathTbl3SglPhRgn01bar,\
+        usecols=["etav_uPas"]).squeeze()
+    arretag05bar_uPas= pd.read_csv(pathTbl3SglPhRgn05bar,\
         usecols=["etav_uPas"]).squeeze()
     def rhogs_kg_m3(self, t_C = "NotProvided"):
         Vg_m3_kg = interp1d(self.arrts_C,self.arrVgs_m3_kg)
@@ -96,6 +108,8 @@ class water():
     def rhog_kg_m3(self, t_C, P_bar = 1):
         if P_bar == 0.1:
             Vg_m3_kg = interp1d(self.arrt01bar_C,self.arrVg01bar_m3_kg)
+        elif P_bar == 0.5:
+            Vg_m3_kg = interp1d(self.arrt05bar_C,self.arrVg05bar_m3_kg)
         else:
             Vg_m3_kg = interp1d(self.arrt_C,self.arrVg_m3_kg)
         if t_C == "NotProvided":
@@ -111,6 +125,8 @@ class water():
     def etag_Pas(self, t_C, P_bar = 1):
         if P_bar == 0.1:
             etag_uPas = interp1d(self.arrt01bar_C,self.arretag01bar_uPas)
+        elif P_bar == 0.5:
+            etag_uPas = interp1d(self.arrt05bar_C,self.arretag05bar_uPas)
         else:
             etag_uPas = interp1d(self.arrt_C,self.arretag_uPas)
         if t_C == "NotProvided":
@@ -120,6 +136,8 @@ class water():
     def lambdag_W_mK(self, t_C, P_bar = 1):
         if P_bar == 0.1:
             lambdag_mW_mK = interp1d(self.arrt01bar_C,self.arrlambdag01bar_mW_mK)
+        elif P_bar == 0.5:
+            lambdag_mW_mK = interp1d(self.arrt05bar_C,self.arrlambdag05bar_mW_mK)
         else:
             lambdag_mW_mK = interp1d(self.arrt_C,self.arrlambdag_mW_mK)
         if t_C == "NotProvided":
@@ -129,6 +147,8 @@ class water():
     def Hg_J_kg(self, t_C, P_bar = 1):
         if P_bar == 0.1:
             Hg_kJ_kg = interp1d(self.arrt01bar_C,self.arrHg01bar_kJ_kg)
+        elif P_bar == 0.5:
+            Hg_kJ_kg = interp1d(self.arrt05bar_C,self.arrHg05bar_kJ_kg)
         else:
             Hg_kJ_kg = interp1d(self.arrt_C,self.arrHg_kJ_kg)
         if t_C == "NotProvided":
