@@ -14,78 +14,23 @@ class GnielinskiSngTrbInsPp(object):
     
     '''
   #Please Refer to HEDH 1983 2.5.1 (41)    
+
     def __init__(self,objTube,objFluid, V_m3_s,
-            node1 = {"T_C" : 25, "Q_kW" : 0},
-            node2 = {"T_C" : 25, "Q_kW" : 0},
+            node1 = node.node(25,0),
+            node2 = node.node(25,0),
             direction = "heating"):
     # objTube is an instance of class tube
     # objFluid is an instance of class fluid
         self.V_m3_s=V_m3_s
         self.objTube=objTube
         self.objFluid=objFluid
+        self.node1=node1
+        self.node2=node2
         #self.node_initializer(node1,node2)
+        self.
 
     # Find the task
-    def node_initializer(self,node1,node2):
-        '''define the task for this element
-
-           node1(T1,Q1),node2(T2,Q2)
-            T1      T2      Q1         Q2     direction       input    output/overide
-           ---------------------------------------------------------------------
-           any      any   !=""&!=Q2   !=""    any                 heat unbalance
-           !=""    !=""    !=""       any     any                 over rigid  
-            =""     any     any       any     any                 no temp diff
-           !=""     =""     =""        =""    any                 insuff input 
-            =""    !=""     =""        =""    any                 insuff input 
-           !=""     !=""    =""        =""    any        T1,T2    Q1,Q2=Q1
-           !=""     =""    !=""        =""    any        T1,Q1    Q2=Q1,T2    
-           !=""     =""     =""       !=""    any        T1,Q2    Q1=Q2,T2    
-            >T2    !=""    !=""        =""    heating    T1,Q1    Q1=Q2,T2    
-            >T2    !=""     =""       !=""    heating    T1,Q2    Q1=Q2,T2    
-           !=""     >T1    !=""        =""    heating    T2,Q1    Q2=Q1,T1    
-           !=""     >T1     =""       !=""    heating    T2,Q2    Q2=Q1,T1    
-            <T2    !=""    !=""        =""    cooling    T1,Q1    Q1=Q2,T2    
-            <T2    !=""     =""       !=""    cooling    T1,Q2    Q1=Q2,T2    
-           !=""     <T1    !=""        =""    cooling    T2,Q1    Q2=Q1,T1    
-           !=""     <T1     =""       !=""    cooling    T2,Q2    Q2=Q1,T1    
-        '''
-        #rule out four exceptions
-        if node1["Q_kW"] != node2["Q_kW"] \
-                and node1["Q_kW"] != "" and node2["Q_kW"] != "":
-                    raise InvalidNodeError("heat unbalance") 
-        if node1["T_C"] == node2["T_C"] :
-            raise InvalidNodeError("no temperature difference")
-        if node1["Q_kW"] == "" and node2["Q_kW"] == "" :
-            pass
-        elif node1["T_C"] != "" and node2["T_C"] != "" :
-            raise InvalidNodeError("over rigid")
-        if node1["T_C"] != "" and node2["T_C"] == "" \
-                and node1["Q_kW"] == "" and node2["Q_kW"] == "" :
-                    raise InvalidNodeError("insufficient input")
-        if node1["T_C"] == "" and node2["T_C"] != "" \
-                and node1["Q_kW"] != "" and node2["Q_kW"] == "" :
-                    raise InvalidNodeError("insufficient input")
-
-        # a special case where only temperatures are set
-        if node1["Q_kW"] == "" and node2["Q_kW"] == "" :
-            pass
-        else:
-            #set Q
-            if node1["Q_kW"] != "" and node2["Q_kW"] == "" :
-                node2["Q_kW"] == node1["Q_kW"]
-            elif node2["Q_kW"] != "" and node1["Q_kW"] == "" :
-                node1["Q_kW"] == node2["Q_kW"]
-            #set T
-            if self.direction == "heating" :
-                if node1["T_C"] > node2["T_C"] :
-                    node2["T_C"] == ""
-                else:
-                    node1["T_C"] == ""
-            if self.direction == "cooling" :
-                if node1["T_C"] < node2["T_C"] :
-                    node2["T_C"] == ""
-                else:
-                    node1["T_C"] == ""
+    
 
     # Fluid Velocity
     def u_m_s(self):
